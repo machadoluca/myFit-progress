@@ -13,6 +13,7 @@ export default function LoginScreen() {
     try {
       const token = await loginUser(username, password);
       if (token) {
+        navigation.navigate('Home');
       }
     } catch (error) {
       console.error(error);
