@@ -23,7 +23,10 @@ const HomeScreen = () => {
   };
 
   return (
+
     <View style={styles.container}>
+      <View style={styles.headerSpace} />
+      
       <View style={styles.calendarContainer}>
         <Calendar onDayPress={handleDayPress} />
       </View>
@@ -33,7 +36,7 @@ const HomeScreen = () => {
         transparent={false}
         visible={isExerciseModalVisible}
         onRequestClose={() => setExerciseModalVisible(false)}
-      >
+>
         <View style={styles.modalContainer}>
           <View style={styles.modalHeader}>
             <TouchableOpacity
@@ -52,7 +55,6 @@ const HomeScreen = () => {
           <Text style={styles.modalTitle}>
             Exercícios para {formatSelectedDate()}
           </Text>
-          {/*futura exibição de exercícios */}
         </View>
       </Modal>
     </View>
@@ -64,6 +66,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
+  headerSpace: {
+    height: 50,
+  },
   calendarContainer: {
     flex: 1,
     borderBottomWidth: 1,
@@ -71,16 +76,17 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    padding: 20,
+    paddingTop: 20, 
+    paddingHorizontal: 20,
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    marginBottom: 20,
   },
+  
   modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',

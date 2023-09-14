@@ -14,15 +14,13 @@ export default function RegisterScreen() {
   const [anosExperiencia, setAnosExperiencia] = useState('');
 
   const handleRegister = async () => {
-    try {
-      await registerUser(username, password, isTrainer, cpf, escolaridade, formacao, anosExperiencia);
-    } catch (error) {
-      console.error(error);
-    }
+
   };
 
   return (
     <View style={styles.container}>
+      <View style={styles.headerSpace} />
+      
       <TextInput
         placeholder="Username"
         value={username}
@@ -90,6 +88,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  headerSpace: {
+    height: 50,
   },
   input: {
     width: '80%',
