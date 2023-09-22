@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, ScrollView, SafeAreaView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, ScrollView, SafeAreaView, Image } from 'react-native';
 import exercisesByCategory from '../components/exercises';
+import { useNavigation } from '@react-navigation/native';
 
 const ExerciseScreen = () => {
+  const navigation = useNavigation();
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedExercises, setSelectedExercises] = useState([]);
@@ -22,76 +24,81 @@ const ExerciseScreen = () => {
   const filterExercises = () => {
     if (selectedCategory) {
       return exercisesByCategory[selectedCategory].filter((exercise) =>
-        exercise.toLowerCase().includes(searchText.toLowerCase())
+        exercise.name.toLowerCase().includes(searchText.toLowerCase())
       );
     }
     const allExercises = Object.values(exercisesByCategory).flat();
     return allExercises.filter((exercise) =>
-      exercise.toLowerCase().includes(searchText.toLowerCase())
+      exercise.name.toLowerCase().includes(searchText.toLowerCase())
     );
   };
 
-  const handleExerciseSelection = (exercise) => {
-    if (selectedExercises.includes(exercise)) {
-      setSelectedExercises(selectedExercises.filter((ex) => ex !== exercise));
+  const handleExerciseSelection = (exerciseName) => {
+    if (selectedExercises.includes(exerciseName)) {
+      setSelectedExercises(selectedExercises.filter((ex) => ex !== exerciseName));
     } else {
-      setSelectedExercises([...selectedExercises, exercise]);
+      setSelectedExercises([...selectedExercises, exerciseName]);
     }
   };
 
   const handleSaveExercise = () => {
     // Implementar a lógica para salvar todos os exercícios selecionados no backend.
+    navigation.goBack();
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.headerSpace} />
+      <View style={styles.headerSpace} />
 
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Pesquisar exercício..."
-          onChangeText={handleSearch}
-          value={searchText}
-        />
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Pesquisar exercício..."
+        onChangeText={handleSearch}
+        value={searchText}
+      />
 
-        <View style={styles.categoriesContainer}>
-          {Object.keys(exercisesByCategory).map((category) => (
-            <TouchableOpacity
-              key={category}
+      <View style={styles.categoriesContainer}>
+        {Object.keys(exercisesByCategory).map((category) => (
+          <TouchableOpacity
+            key={category}
+            style={[
+              styles.categoryContainer,
+              selectedCategory === category && styles.selectedCategoryContainer,
+            ]}
+            onPress={() =>
+              selectedCategory === category
+                ? clearCategoryFilter()
+                : filterByCategory(category)
+            }
+          >
+            <Text
               style={[
-                styles.categoryContainer,
-                selectedCategory === category && styles.selectedCategoryContainer,
+                styles.categoryTitle,
+                selectedCategory === category && styles.selectedCategoryTitle,
               ]}
-              onPress={() =>
-                selectedCategory === category
-                  ? clearCategoryFilter()
-                  : filterByCategory(category)
-              }
             >
-              <Text
-                style={[
-                  styles.categoryTitle,
-                  selectedCategory === category && styles.selectedCategoryTitle,
-                ]}
-              >
-                {category}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+              {category}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
+      <ScrollView style={styles.scrollView}>
         <View style={styles.exercisesContainer}>
           {filterExercises().map((exercise) => (
-            <View key={exercise}>
+            <View key={exercise.name}>
               <TouchableOpacity
-                onPress={() => handleExerciseSelection(exercise)}
+                onPress={() => handleExerciseSelection(exercise.name)}
                 style={[
                   styles.exerciseItem,
-                  selectedExercises.includes(exercise) && styles.selectedExercise,
+                  selectedExercises.includes(exercise.name) && styles.selectedExercise,
                 ]}
               >
-                <Text>{exercise}</Text>
+                <Image
+                  source={exercise.image}
+                  style={styles.exerciseImage}
+                />
+                <Text style={styles.exerciseName}>{exercise.name}</Text>
               </TouchableOpacity>
             </View>
           ))}
@@ -111,13 +118,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    paddingHorizontal: 20,
   },
   scrollView: {
     flex: 1,
-    paddingHorizontal: 20,
   },
   headerSpace: {
-    height: 50,
+    height: 80,
   },
   searchInput: {
     height: 40,
@@ -130,7 +137,7 @@ const styles = StyleSheet.create({
   categoriesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   categoryContainer: {
     paddingHorizontal: 10,
@@ -156,14 +163,25 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   exerciseItem: {
-    fontSize: 18,
-    margin: 5,
-    borderWidth: 1,
-    borderColor: 'black',
-    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderColor: 'lightgray',
   },
   selectedExercise: {
-    backgroundColor: 'lightgreen',
+    borderColor: 'lightblue',
+    borderBottomWidth: 2,
+  },
+  exerciseImage: {
+    width: 45,
+    height: 50,
+    marginRight: 10,
+  },
+  exerciseName: {
+    flex: 1, // Ocupa o espaço restante para evitar alinhamento à direita
+    fontSize: 18,
   },
   saveButtonContainer: {
     position: 'absolute',
@@ -174,7 +192,3 @@ const styles = StyleSheet.create({
 });
 
 export default ExerciseScreen;
-
-
-
-

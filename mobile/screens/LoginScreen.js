@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet} from 'react-native';
-import { loginUser } from '../components/api';
+import { loginUser } from '../../components/api';
 import { useNavigation } from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 

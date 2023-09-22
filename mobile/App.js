@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from './screens/HomeScreen';
 import ExerciseScreen from './screens/ExerciseScreen';
 import PerfilScreen from './screens/PerfilScreen';
+import EditPerfilScreen from './screens/EditPerfilScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -43,6 +44,7 @@ export default function App() {
         <Stack.Screen name="Register" component={RegisterScreen} /> */}
         <Stack.Screen name="HomeTab" component={HomeTabNavigator} />
         <Stack.Screen name="Exercise" component={ExerciseScreen} />
+        <Stack.Screen name="EditPerfil" component={EditPerfilScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
