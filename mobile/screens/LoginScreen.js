@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet} from 'react-native';
-import { loginUser } from '../components/api';
+import { loginUser } from '../../components/api';
 import { useNavigation } from '@react-navigation/native';
 import {Button} from 'react-native-elements';
 
@@ -10,13 +10,6 @@ export default function LoginScreen() {
   const navigation = useNavigation()
 
   const handleLogin = async () => {
-    try {
-      const token = await loginUser(username, password);
-      if (token) {
-      }
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   const handleRegisterNavigation = () => {
@@ -25,6 +18,7 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.headerSpace} />
       <TextInput
         placeholder="Username"
         value={username}
@@ -51,6 +45,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  headerSpace: {
+    height: 50,
   },
   input: {
     width: '80%',
