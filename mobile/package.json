@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "name": "myFit progress mobile",
-=======
   "name": "mobile",
->>>>>>> 8286667b89cb5d61832e68dad7095b8916731d4f
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
