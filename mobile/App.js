@@ -8,6 +8,8 @@ import HomeScreen from './screens/HomeScreen';
 import ExerciseScreen from './screens/ExerciseScreen';
 import PerfilScreen from './screens/PerfilScreen';
 import EditPerfilScreen from './screens/EditPerfilScreen';
+import LoginScreen from './screens/LoginScreen';
+//import RegisterScreen from "./screens/RegisterScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -39,9 +41,9 @@ function HomeTabNavigator() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
-        {/* <Stack.Screen name="Login" component={LoginScreen} /> 
-        <Stack.Screen name="Register" component={RegisterScreen} /> */}
+      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Login" component={LoginScreen} /> 
+        {/*<Stack.Screen name="Register" component={RegisterScreen} />*/}
         <Stack.Screen name="HomeTab" component={HomeTabNavigator} />
         <Stack.Screen name="Exercise" component={ExerciseScreen} />
         <Stack.Screen name="EditPerfil" component={EditPerfilScreen} />

@@ -1,41 +1,58 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet} from 'react-native';
-import { loginUser } from '../../components/api';
+import { View, TextInput, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import {Button} from 'react-native-elements';
+import { Button } from 'react-native-elements';
+import { loginUser } from '../components/api'; 
+
 
 export default function LoginScreen() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const handleLogin = async () => {
+    try {
+      const data = await loginUser(email, password);
+      console.log(data);
+
+      if (data && data.token) {
+        console.log('Token recebido:', data.token);
+        navigation.navigate('HomeScreen');
+      } else {
+        console.error('Erro ao fazer login');
+      }
+    } catch (error) {
+      console.error('Erro ao fazer login', error);
+    }
   };
 
   const handleRegisterNavigation = () => {
-    navigation.navigate('Register')
-  }
+    navigation.navigate('Register');
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerSpace} />
       <TextInput
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
+        placeholder="E-mail"
+        value={email}
+        onChangeText={setEmail}
         style={styles.input}
       />
       <TextInput
-        placeholder="Password"
+        placeholder="Senha"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
         style={styles.input}
       />
-      <View style={styles.containerButton}>
-        <Button  buttonStyle={{borderColor: "lightblue"}} raised type= "outline" titleStyle={{color: "black", fontWeight: 'bold'}} containerStyle={{marginHorizontal: 10}} title="Login" onPress={handleLogin} />
-        <Button  title="Register" onPress={handleRegisterNavigation}/>
-      </View>
+      <Button
+        title="Login"
+        onPress={handleLogin}
+      />
+      <Button
+        title="Registrar"
+        onPress={handleRegisterNavigation}
+      />
     </View>
   );
 }
@@ -46,17 +63,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  headerSpace: {
-    height: 50,
-  },
   input: {
     width: '80%',
     marginBottom: 10,
     padding: 10,
     borderWidth: 1,
     borderColor: 'gray',
-  },
-  containerButton:{
-    flexDirection: 'row',
   },
 });
