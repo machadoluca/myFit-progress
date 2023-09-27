@@ -1,11 +1,13 @@
 import 'dotenv/config';
 import express from 'express';
+import cors from 'cors';
 import userRoutes from './routes/user.routes.js';
 import { createUserToken } from './auth/auth.js';
 
 const app = express();
 
 /* server request configuration */
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
