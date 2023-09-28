@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Button } from 'react-native-elements';
-import { loginUser } from '../components/api'; 
-
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { loginUser } from '../components/api';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -17,7 +16,7 @@ export default function LoginScreen() {
 
       if (data && data.token) {
         console.log('Token recebido:', data.token);
-        navigation.navigate('HomeScreen');
+        navigation.navigate('HomeTab');
       } else {
         console.error('Erro ao fazer login');
       }
@@ -32,27 +31,47 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        placeholder="E-mail"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Senha"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-        style={styles.input}
-      />
-      <Button
-        title="Login"
+      <Text style={styles.title}>
+        {' '}
+        Fit<Text style={styles.orangeText}>App</Text>
+      </Text>
+      <View style={styles.inputContainer}>
+        <Text style={styles.inputLabel}>E-mail:</Text>
+        <View style={styles.inputIconContainer}>
+          <Icon name="user" size={20} color="white" style={styles.icon} />
+          <TextInput
+            placeholder="example@email.com"
+            placeholderTextColor={'rgba(255, 255, 255, 0.5)'}
+            value={email}
+            onChangeText={setEmail}
+            style={styles.input}
+          />
+        </View>
+        <Text style={styles.inputLabel}>Senha:</Text>
+        <View style={styles.inputIconContainer}>
+          <Icon name="lock" size={20} color="white" style={styles.icon} />
+          <TextInput
+            placeholder="**********"
+            placeholderTextColor={'rgba(255, 255, 255, 0.5)'}
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+            style={styles.input}
+          />
+        </View>
+      </View>
+      <TouchableOpacity
+        style={styles.loginButton}
         onPress={handleLogin}
-      />
-      <Button
-        title="Registrar"
-        onPress={handleRegisterNavigation}
-      />
+      >
+        <Text style={styles.loginButtonText}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleRegisterNavigation}>
+        <Text style={styles.registerText}>
+          É novo(a)?{' '}
+          <Text style={styles.registerLink}>Registre-se</Text>
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -60,14 +79,62 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#0E153A',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  title: {
+    color: 'white',
+    fontSize: 36,
+    fontWeight: 'bold',
+    marginBottom: 50,
+  },
+  orangeText: {
+    color: 'orange',
+  },
+  inputContainer: {
+    width: '80%',
+  },
+  inputLabel: {
+    color: 'white',
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  inputIconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: 'white',
+    marginBottom: 20,
+  },
+  input: {
+    color: 'white',
+    flex: 1,
+  },
+  icon: {
+    marginRight: 10,
+  },
+  loginButton: {
+    backgroundColor: 'orange',
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    borderRadius: 5,
+    marginBottom: 5,
+    width: '80%', 
     justifyContent: 'center',
     alignItems: 'center',
   },
-  input: {
-    width: '80%',
-    marginBottom: 10,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
+  loginButtonText: {
+    color: 'black',
+    fontWeight: 'bold',
+  },
+  registerText: {
+    color: 'white',
+    marginTop: 10,
+  },
+  registerLink: {
+    color: 'orange',
+    textDecorationLine: 'underline',
   },
 });

@@ -1,4 +1,3 @@
-;
 // Função para fazer a solicitação de login
 export async function loginUser(email, password) {
   try {
@@ -13,7 +12,6 @@ export async function loginUser(email, password) {
     const data = await response.json();
 
     if (data.token) {
-        
       console.log('Login bem-sucedido');
       return data; 
     } else {
