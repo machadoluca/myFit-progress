@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
   loginButtonText: {
     color: 'black',
     fontWeight: 'bold',
+    fontSize: 16,
   },
   registerText: {
     color: 'white',
