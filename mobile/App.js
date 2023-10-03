@@ -16,7 +16,7 @@ const Tab = createBottomTabNavigator();
 
 function HomeTabNavigator() {
   return (
-    <Tab.Navigator
+<Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -29,6 +29,9 @@ function HomeTabNavigator() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
+        tabBarStyle: { backgroundColor: 'orange' },
+        tabBarInactiveTintColor: '#0E153A',
+        tabBarActiveTintColor: 'white', 
         headerShown: false,
       })}
     >
@@ -41,7 +44,7 @@ function HomeTabNavigator() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeTab" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} /> 
         {/*<Stack.Screen name="Register" component={RegisterScreen} />*/}
         <Stack.Screen name="HomeTab" component={HomeTabNavigator} />

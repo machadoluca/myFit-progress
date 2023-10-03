@@ -3,12 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-na
 import { useNavigation } from '@react-navigation/native';
 import { format, addDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import {LinearGradient} from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [currentMonth, setCurrentMonth] = useState('');
   const [daysOfWeek, setDaysOfWeek] = useState([]);
 
   const handleDayPress = (day) => {
@@ -18,6 +18,13 @@ const HomeScreen = () => {
   const handleAddExercise = () => {
     navigation.navigate('Exercise');
   };
+
+  useEffect(() => {
+    setCurrentMonth(
+      format(selectedDate, 'MMMM yyyy', { locale: ptBR }).charAt(0).toUpperCase() +
+        format(selectedDate, 'MMMM yyyy', { locale: ptBR }).slice(1).toLowerCase()
+    );
+  }, [selectedDate]);
 
   useEffect(() => {
     const currentDate = new Date();
@@ -41,16 +48,12 @@ const HomeScreen = () => {
   }, []);
 
   return (
-    <LinearGradient
-    colors={['#181f45', '#0b1445','#101845', '#0E153A']}
-    start={{ x: 0, y: 0 }} 
-    end={{ x: 1, y: 1 }} 
-    style={styles.container}
-    >
+    <View style={styles.container}>
       <SafeAreaView style={styles.header}>
         <Text style={styles.title}>Bem Vindo!</Text>
         <Text style={styles.subtitle}>Hoje é dia de Treino!</Text>
         <View style={styles.dateContainerWrapper}>
+          <Text style={styles.currentMonth}>{currentMonth}</Text>
           <View style={styles.dateContainer}>
             {daysOfWeek.map((date, index) => {
               return (
@@ -60,7 +63,7 @@ const HomeScreen = () => {
                   onPress={() => handleDayPress(date)}
                 >
                   <Text style={styles.dayText}>
-                    {format(date, 'EEE', { locale: ptBR }).slice(0, 1).toUpperCase() +
+                    {format(date, 'EEE', { locale: ptBR }).charAt(0).toUpperCase() +
                       format(date, 'EEE', { locale: ptBR }).slice(1, 3)}
                   </Text>
                   <Text
@@ -82,18 +85,17 @@ const HomeScreen = () => {
         <Icon name="plus-circle" size={20} color="white" style={styles.plusIcon} />
         <Text style={styles.addButtonText}>Adicionar Exercício</Text>
       </TouchableOpacity>
-    </LinearGradient>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#181f45', 
+    backgroundColor: '#0E153A',
     alignItems: 'center',
   },
   header: {
-    backgroundColor: '#0E153A', 
     position: 'absolute',
     top: 0,
     left: 0,
@@ -114,9 +116,16 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   dateContainerWrapper: {
-    backgroundColor: 'orange', // Fundo laranja
-    padding: 10,
+    backgroundColor: 'orange',
+    paddingVertical: 20,
     marginTop: 20,
+  },
+  currentMonth: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
+    marginBottom: 16,
   },
   dateContainer: {
     flexDirection: 'row',
@@ -138,8 +147,8 @@ const styles = StyleSheet.create({
     borderColor: 'blue',
   },
   selectedDayButton: {
-    borderColor: '#00BFFF', // Borda bege
-    backgroundColor: '#00BFFF', // Fundo bege
+    borderColor: '#00BFFF',
+    backgroundColor: '#00BFFF',
     borderRadius: 8,
     paddingHorizontal: 7,
     paddingVertical: 5,
@@ -158,14 +167,14 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   addButton: {
-    backgroundColor: 'orange', // Fundo laranja
+    backgroundColor: 'orange',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,
-    borderColor: 'orange', // Borda laranja
+    borderColor: 'orange',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: "100%",
+    marginTop: '100%',
   },
   plusIcon: {
     marginRight: 10,
