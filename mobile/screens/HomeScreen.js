@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { format, addDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -47,9 +47,11 @@ const HomeScreen = () => {
     }
   }, []);
 
+  const screenHeight = Dimensions.get('window').height;
+
   return (
     <View style={styles.container}>
-      <SafeAreaView style={styles.header}>
+      <SafeAreaView style={[styles.header, { bottom: screenHeight * 0.1 }]}>
         <Text style={styles.title}>Bem Vindo!</Text>
         <Text style={styles.subtitle}>Hoje é dia de Treino!</Text>
         <View style={styles.dateContainerWrapper}>
@@ -100,7 +102,6 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    bottom: 600,
   },
   title: {
     fontSize: 24,

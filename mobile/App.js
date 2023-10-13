@@ -9,7 +9,7 @@ import ExerciseScreen from './screens/ExerciseScreen';
 import PerfilScreen from './screens/PerfilScreen';
 import EditPerfilScreen from './screens/EditPerfilScreen';
 import LoginScreen from './screens/LoginScreen';
-//import RegisterScreen from "./screens/RegisterScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -46,7 +46,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} /> 
-        {/*<Stack.Screen name="Register" component={RegisterScreen} />*/}
+        <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="HomeTab" component={HomeTabNavigator} />
         <Stack.Screen name="Exercise" component={ExerciseScreen} />
         <Stack.Screen name="EditPerfil" component={EditPerfilScreen} />

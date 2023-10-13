@@ -7,6 +7,7 @@ import { loginUser } from '../components/api';
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
 
   const handleLogin = async () => {
@@ -27,6 +28,10 @@ export default function LoginScreen() {
 
   const handleRegisterNavigation = () => {
     navigation.navigate('Register');
+  };
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -53,11 +58,18 @@ export default function LoginScreen() {
           <TextInput
             placeholder="**********"
             placeholderTextColor={'rgba(255, 255, 255, 0.5)'}
-            secureTextEntry
+            secureTextEntry={!showPassword}
             value={password}
             onChangeText={setPassword}
             style={styles.input}
           />
+          <TouchableOpacity onPress={toggleShowPassword} style={styles.passwordToggle}>
+            <Icon
+              name={showPassword ? 'eye' : 'eye-slash'}
+              size={20}
+              color="white"
+            />
+          </TouchableOpacity>
         </View>
       </View>
       <TouchableOpacity
@@ -137,5 +149,10 @@ const styles = StyleSheet.create({
   registerLink: {
     color: 'orange',
     textDecorationLine: 'underline',
+  },
+  passwordToggle: {
+    position: 'absolute',
+    right: 10,
+    top: 2, 
   },
 });
