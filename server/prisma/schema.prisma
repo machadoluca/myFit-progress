@@ -37,10 +37,10 @@ model Clients {
 
 model Exercises {
   workoutId   String @id @default(uuid())
+  name        String
   group       String
   description String
   intensity   String
-  video       Bytes
 
   clients Clients[]
 }
