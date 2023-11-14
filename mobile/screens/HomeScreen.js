@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     borderColor: 'orange',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: '100%',
+    marginTop: '50%',
   },
   plusIcon: {
     marginRight: 10,

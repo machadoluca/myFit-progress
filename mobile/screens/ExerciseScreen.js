@@ -1,14 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, ScrollView, SafeAreaView, Image } from 'react-native';
-import exercisesByCategory from '../components/exercises';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { getExercisesFromServer } from '../components/api'; 
 
 const ExerciseScreen = () => {
   const navigation = useNavigation();
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedExercises, setSelectedExercises] = useState([]);
+  const [serverExercises, setServerExercises] = useState([]);
+
+  // Função para buscar exercícios do servidor
+  const ExercisesFromServer = async () => {
+    const exercises = await getExercisesFromServer();
+    if (exercises) {
+      setServerExercises(exercises);
+    }
+  };
+
+  useEffect(() => {
+    ExercisesFromServer();
+  }, []);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -24,12 +37,12 @@ const ExerciseScreen = () => {
 
   const filterExercises = () => {
     if (selectedCategory) {
-      return exercisesByCategory[selectedCategory].filter((exercise) =>
+      return serverExercises.filter((exercise) =>
+        exercise.group === selectedCategory &&
         exercise.name.toLowerCase().includes(searchText.toLowerCase())
       );
     }
-    const allExercises = Object.values(exercisesByCategory).flat();
-    return allExercises.filter((exercise) =>
+    return serverExercises.filter((exercise) =>
       exercise.name.toLowerCase().includes(searchText.toLowerCase())
     );
   };
@@ -64,26 +77,26 @@ const ExerciseScreen = () => {
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.categoriesContainer}>
-          {Object.keys(exercisesByCategory).map((category) => (
+          {Array.from(new Set(serverExercises.map(exercise => exercise.group))).map((group) => (
             <TouchableOpacity
-              key={category}
+              key={group}
               style={[
                 styles.categoryContainer,
-                selectedCategory === category && styles.selectedCategoryContainer,
+                selectedCategory === group && styles.selectedCategoryContainer,
               ]}
               onPress={() =>
-                selectedCategory === category
+                selectedCategory === group
                   ? clearCategoryFilter()
-                  : filterByCategory(category)
+                  : filterByCategory(group)
               }
             >
               <Text
                 style={[
                   styles.categoryTitle,
-                  selectedCategory === category && styles.selectedCategoryTitle,
+                  selectedCategory === group && styles.selectedCategoryTitle,
                 ]}
               >
-                {category}
+                {group}
               </Text>
             </TouchableOpacity>
           ))}
@@ -92,17 +105,13 @@ const ExerciseScreen = () => {
         <View style={styles.exercisesContainer}>
           {filterExercises().map((exercise) => (
             <TouchableOpacity
-              key={exercise.name}
+              key={exercise._id}
               onPress={() => handleExerciseSelection(exercise.name)}
               style={[
                 styles.exerciseItem,
                 selectedExercises.includes(exercise.name) && styles.selectedExercise,
               ]}
             >
-              <Image
-                source={exercise.image}
-                style={styles.exerciseImage}
-              />
               <Text style={styles.exerciseName}>{exercise.name}</Text>
             </TouchableOpacity>
           ))}
@@ -190,12 +199,7 @@ const styles = StyleSheet.create({
     borderColor: 'orange',
     borderBottomWidth: 2,
   },
-  exerciseImage: {
-    width: 45,
-    height: 55,
-    marginRight: 10,
-    borderRadius: 2,
-  },
+  
   exerciseName: {
     flex: 1, 
     fontSize: 18,

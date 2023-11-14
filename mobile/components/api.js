@@ -24,3 +24,15 @@ export async function loginUser(email, password) {
   }
 }
 
+export async function getExercisesFromServer() {
+  try {
+    const response = await fetch('http://192.168.20.104:3000/exercises');
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.error('Erro ao buscar exercícios do servidor:', error);
+    return null;
+  }
+}
+
