@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, ScrollView, SafeAreaView, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, ScrollView, SafeAreaView} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getExercisesFromServer } from '../components/api'; 
+import { getExercisesFromServer, saveExercises} from '../components/api';
 
 const ExerciseScreen = () => {
   const navigation = useNavigation();
@@ -11,7 +11,6 @@ const ExerciseScreen = () => {
   const [selectedExercises, setSelectedExercises] = useState([]);
   const [serverExercises, setServerExercises] = useState([]);
 
-  // Função para buscar exercícios do servidor
   const ExercisesFromServer = async () => {
     const exercises = await getExercisesFromServer();
     if (exercises) {
@@ -55,9 +54,19 @@ const ExerciseScreen = () => {
     }
   };
 
-  const handleSaveExercise = () => {
-    // Implementar a lógica para salvar todos os exercícios selecionados no backend.
-    navigation.goBack();
+  const handleSaveExercise = async () => {
+    try {
+        const response = await saveExercises(selectedExercises);
+  
+        console.log('Exercícios salvos:', response);
+  
+        setSelectedExercises([]);
+  
+        navigation.goBack();
+
+    } catch (error) {
+      console.error('Erro ao salvar exercícios:', error);
+    }
   };
 
   return (

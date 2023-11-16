@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IconBusinesTimer from 'react-native-vector-icons/FontAwesome5';
-import IconBusines from 'react-native-vector-icons/MaterialIcons';
 import IconDocument from 'react-native-vector-icons/Entypo';
 
 
@@ -13,7 +12,6 @@ const RegisterScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isProfessional, setIsProfessional] = useState(false);
   const [cpf, setCpf] = useState('');
-  const [formacao, setFormacao] = useState('');
   const [professionTime, setProfessionTime] = useState('');
 
   const toggleShowPassword = () => {
@@ -81,16 +79,6 @@ const RegisterScreen = () => {
               placeholderTextColor="rgba(255, 255, 255, 0.5)"
               value={cpf}
               onChangeText={setCpf}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <IconBusines name="business-center" size={20} color="white" style={styles.icon} />
-            <TextInput
-              style={styles.input}
-              placeholder="Insira Formação"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              value={formacao}
-              onChangeText={setFormacao}
             />
           </View>
           <View style={styles.inputContainer}>

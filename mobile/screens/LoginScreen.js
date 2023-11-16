@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { loginUser } from '../components/api';
+import { loginUser, verifyTokenOnServer } from '../components/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -26,6 +27,44 @@ export default function LoginScreen() {
     }
   };
 
+  useEffect(() => {
+    checkTokenValidity();
+  }, []);
+
+  const checkTokenValidity = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem('userToken');
+      if (userToken) {
+        const isTokenValid = await validateTokenWithServer();
+        if (!isTokenValid) {
+          await AsyncStorage.removeItem('userToken');
+          // Redirecionar para a tela de login
+          navigation.navigate('Login');
+      } else {
+        navigation.navigate('HomeTab')
+      }
+    }
+    } catch (error) {
+      console.error('Erro ao verificar o token:', error);
+    }
+  };
+  
+const validateTokenWithServer = async () => {
+  try {
+    const response = await verifyTokenOnServer();
+
+    if (response && response.valid) {
+      return true;
+    } else {
+      return false; 
+    }
+  } catch (error) {
+    console.error('Erro ao validar token com o servidor:', error);
+    return false;
+  }
+};
+ 
+
   const handleRegisterNavigation = () => {
     navigation.navigate('Register');
   };
@@ -34,6 +73,8 @@ export default function LoginScreen() {
     setShowPassword(!showPassword);
   };
 
+
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
