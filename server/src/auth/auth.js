@@ -44,3 +44,10 @@ export async function verifyAuth(request, response, next) {
     return response.status(401).send({ error: 'Invalid token' });
   }
 }
+
+export async function decodeToken(auth) {
+  const [, token] = authorization.split(' ');
+  const user = jwt.verify(token, process.env.SECRET_KEY);
+
+  return user;
+}
