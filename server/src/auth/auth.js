@@ -46,7 +46,7 @@ export async function verifyAuth(request, response, next) {
 }
 
 export async function decodeToken(auth) {
-  const [, token] = authorization.split(' ');
+  const [, token] = auth.split(' ');
   const user = jwt.verify(token, process.env.SECRET_KEY);
 
   return user;
