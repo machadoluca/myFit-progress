@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IconBusinesTimer from 'react-native-vector-icons/FontAwesome5';
 import IconDocument from 'react-native-vector-icons/Entypo';
+import { registerUser} from '../components/api';
+
 
 
 const RegisterScreen = () => {
@@ -13,13 +16,26 @@ const RegisterScreen = () => {
   const [isProfessional, setIsProfessional] = useState(false);
   const [cpf, setCpf] = useState('');
   const [professionTime, setProfessionTime] = useState('');
+  const navigation = useNavigation();
+
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   const handleRegister = async () => {
-    // Lógica de registro aqui
+    try {
+      const response = await registerUser(name, email, password);
+  
+      if (response.success) {
+        console.log('Usuário registrado com sucesso!');
+        navigation.navigate('Login');
+      } else {
+        console.error('Falha no registro do usuário:', response.error);
+      }
+    } catch (error) {
+      console.error('Erro ao registrar usuário:', error);
+    }
   };
 
   return (

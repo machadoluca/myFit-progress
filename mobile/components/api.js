@@ -1,8 +1,36 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+export async function registerUser(name, email, password) {
+  try {
+    const response = await fetch('http://192.168.2.100:3000/users/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+      }),
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Erro desconhecido');
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Erro ao registrar usuário:', error);
+    return { error: error.message };
+  }
+}
+
+
 export async function loginUser(email, password) {
   try {
-    const response = await fetch('http://localhost:3000/login', {
+    const response = await fetch('http://192.168.2.100:3000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,11 +62,11 @@ export async function verifyTokenOnServer() {
       throw new Error('Token não encontrado no AsyncStorage');
     }
 
-    const response = await fetch('http://localhost:3000/???', {
+    const response = await fetch('http://localhost:3000/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userToken}`, 
+        authorization: `Bearer ${userToken}`, 
       },
     });
 
@@ -58,11 +86,11 @@ export async function saveExercises(selectedExercises) {
   try {
     const userToken = await AsyncStorage.getItem('userToken');
 
-    const response = await fetch('http://localhost:3000/???', {
+    const response = await fetch('http://192.168.2.100:3000/exercises/save-workout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userToken}`,
+        authorization: `Bearer ${userToken}`,
       },
       body: JSON.stringify({ selectedExercises }),
     });
@@ -78,7 +106,7 @@ export async function saveExercises(selectedExercises) {
 
 export async function getExercisesFromServer() {
   try {
-    const response = await fetch('http://localhost:3000/exercises');
+    const response = await fetch('http://192.168.2.100:3000/exercises');
     const data = await response.json();
 
     return data;
