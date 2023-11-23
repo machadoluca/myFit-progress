@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export async function registerUser(name, email, password) {
   try {
-    const response = await fetch('http://192.168.2.100:3000/users/create', {
+    const response = await fetch('http://192.168.2.102:3000/users/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export async function registerUser(name, email, password) {
 
 export async function loginUser(email, password) {
   try {
-    const response = await fetch('http://192.168.2.100:3000/login', {
+    const response = await fetch('http://192.168.2.102:3000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ export async function loginUser(email, password) {
   }
 }
 
-export async function verifyTokenOnServer() {
+/*export async function verifyTokenOnServer() {
   try {
     const userToken = await AsyncStorage.getItem('userToken');
 
@@ -62,7 +62,7 @@ export async function verifyTokenOnServer() {
       throw new Error('Token não encontrado no AsyncStorage');
     }
 
-    const response = await fetch('http://localhost:3000/users', {
+    const response = await fetch('http://192.168.2.102:3000/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -81,12 +81,12 @@ export async function verifyTokenOnServer() {
     throw error;
   }
 }
-
+*/
 export async function saveExercises(selectedExercises) {
   try {
     const userToken = await AsyncStorage.getItem('userToken');
 
-    const response = await fetch('http://192.168.2.100:3000/exercises/save-workout', {
+    const response = await fetch('http://192.168.2.102:3000/exercises/save-workout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export async function saveExercises(selectedExercises) {
 
 export async function getExercisesFromServer() {
   try {
-    const response = await fetch('http://192.168.2.100:3000/exercises');
+    const response = await fetch('http://192.168.2.102:3000/exercises');
     const data = await response.json();
 
     return data;
