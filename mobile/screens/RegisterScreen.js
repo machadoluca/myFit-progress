@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IconBusinesTimer from 'react-native-vector-icons/FontAwesome5';
@@ -39,7 +39,7 @@ const RegisterScreen = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>
         Registre-
         <Text style={styles.orangeText}>se</Text>
@@ -120,7 +120,7 @@ const RegisterScreen = () => {
           <Text style={styles.ProfessionalLink}>Clique aqui</Text>
         </Text>
       </TouchableOpacity>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
