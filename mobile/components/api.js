@@ -62,7 +62,7 @@ export async function verifyTokenOnServer() {
       throw new Error('Token não encontrado no AsyncStorage');
     }
 
-    const response = await fetch('http://localhost:3000/users', {
+    const response = await fetch('http://192.168.2.102:3000/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
