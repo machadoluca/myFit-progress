@@ -4,7 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getExercisesFromServer, saveExercises} from '../components/api';
 
-const ExerciseScreen = () => {
+const ExerciseScreen = ({route}) => {
+  const { dayOfWeek } = route.params;
   const navigation = useNavigation();
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -56,7 +57,8 @@ const ExerciseScreen = () => {
 
   const handleSaveExercise = async () => {
     try {
-        const response = await saveExercises(selectedExercises);
+        const response = await saveExercises(selectedExercises, dayOfWeek);
+
   
         console.log('Exercícios salvos:', response);
   
@@ -114,7 +116,7 @@ const ExerciseScreen = () => {
         <View style={styles.exercisesContainer}>
           {filterExercises().map((exercise) => (
             <TouchableOpacity
-              key={exercise._id}
+              key={exercise.workoutId}
               onPress={() => handleExerciseSelection(exercise.name)}
               style={[
                 styles.exerciseItem,

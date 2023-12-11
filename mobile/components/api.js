@@ -1,5 +1,33 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+export async function registerUser(name, email, password) {
+  try {
+    const response = await fetch('http://localhost:3000/users/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+      }),
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Erro desconhecido');
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Erro ao registrar usuário:', error);
+    return { error: error.message };
+  }
+}
+
+
 export async function loginUser(email, password) {
   try {
     const response = await fetch('http://localhost:3000/login', {
@@ -34,11 +62,11 @@ export async function verifyTokenOnServer() {
       throw new Error('Token não encontrado no AsyncStorage');
     }
 
-    const response = await fetch('http://localhost:3000/???', {
+    const response = await fetch('http://192.168.2.102:3000/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userToken}`, 
+        authorization: `Bearer ${userToken}`, 
       },
     });
 
@@ -54,17 +82,76 @@ export async function verifyTokenOnServer() {
   }
 }
 
-export async function saveExercises(selectedExercises) {
+export async function getUserDetails() {
+  try {
+    const userToken = await AsyncStorage.getItem('userToken');
+    const response = await fetch('http://localhost:3000/users/???', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${userToken}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return data; 
+    } else {
+      throw new Error('Erro ao buscar detalhes do usuário');
+    }
+  } catch (error) {
+    console.error('Erro ao buscar detalhes do usuário:', error);
+    throw error;
+  }
+}
+
+export async function updateProfile(name, weight, image) {
   try {
     const userToken = await AsyncStorage.getItem('userToken');
 
-    const response = await fetch('http://localhost:3000/???', {
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('weight', weight);
+    formData.append('profileImage', {
+      uri: image.uri,
+      type: image.type,
+      name: 'profileImage.jpg',
+    });
+
+    const response = await fetch('http://localhost:3000/users/update-profile', {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${userToken}`,
+      },
+      body: formData,
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error('Erro ao atualizar perfil');
+    }
+  } catch (error) {
+    console.error('Erro ao atualizar perfil:', error);
+    throw error;
+  }
+}
+
+export async function saveExercises(selectedExercises,dayOfWeek) {
+  try {
+    const userToken = await AsyncStorage.getItem('userToken');
+
+    const response = await fetch('http://localhost:3000/exercises/save-workout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userToken}`,
+        authorization: `Bearer ${userToken}`,
       },
-      body: JSON.stringify({ selectedExercises }),
+      body: JSON.stringify({ selectedExercises, dayOfWeek }),
     });
 
     const result = await response.json();

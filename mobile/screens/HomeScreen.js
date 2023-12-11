@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { format, addDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import DayOfWeekPage from '../components/HomeComponents/DayOfWeekPage'
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -15,8 +15,8 @@ const HomeScreen = () => {
     setSelectedDate(day);
   };
 
-  const handleAddExercise = () => {
-    navigation.navigate('Exercise');
+  const handleAddExercise = (dayOfWeek) => {
+    navigation.navigate('Exercise', {dayOfWeek});
   };
 
   useEffect(() => {
@@ -47,13 +47,13 @@ const HomeScreen = () => {
     }
   }, []);
 
-  const screenHeight = Dimensions.get('window').height;
 
-  return (
-    <View style={styles.container}>
-      <SafeAreaView style={[styles.header, { bottom: screenHeight * 0.1 }]}>
-        <Text style={styles.title}>Bem Vindo!</Text>
-        <Text style={styles.subtitle}>Hoje é dia de Treino!</Text>
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Bem Vindo!</Text>
+          <Text style={styles.subtitle}>Hoje é dia de Treino!</Text>
+        </View>
         <View style={styles.dateContainerWrapper}>
           <Text style={styles.currentMonth}>{currentMonth}</Text>
           <View style={styles.dateContainer}>
@@ -81,13 +81,15 @@ const HomeScreen = () => {
             })}
           </View>
         </View>
-      </SafeAreaView>
-
-      <TouchableOpacity style={styles.addButton} onPress={handleAddExercise}>
-        <Icon name="plus-circle" size={20} color="white" style={styles.plusIcon} />
-        <Text style={styles.addButtonText}>Adicionar Exercício</Text>
-      </TouchableOpacity>
-    </View>
+        <View style={styles.dayOfWeekPageContainer}>
+          {selectedDate && (
+            <DayOfWeekPage
+              dayOfWeek={selectedDate.getDay()}
+              handleAddExercise={handleAddExercise}
+            />
+          )}
+        </View>
+    </SafeAreaView>
   );
 };
 
@@ -96,6 +98,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0E153A',
     alignItems: 'center',
+    justifyContent: 'center'
   },
   header: {
     position: 'absolute',
@@ -119,7 +122,8 @@ const styles = StyleSheet.create({
   dateContainerWrapper: {
     backgroundColor: 'orange',
     paddingVertical: 20,
-    marginTop: 20,
+    marginTop: 120, 
+    width: '100%',    
   },
   currentMonth: {
     fontSize: 18,
@@ -167,23 +171,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: 'white',
   },
-  addButton: {
-    backgroundColor: 'orange',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-    borderColor: 'orange',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: '50%',
-  },
-  plusIcon: {
-    marginRight: 10,
-  },
-  addButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+  dayOfWeekPageContainer: {
+    flex: 1, 
+    width: '100%',
   },
 });
 

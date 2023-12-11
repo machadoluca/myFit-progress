@@ -1,59 +1,90 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, SafeAreaView } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { updateProfile } from '../components/api'; 
+import blankPhoto from '../assets/perfil.png';
 
 const EditPerfilScreen = ({ navigation }) => {
-  const [nome, setNome] = useState('');
-  const [peso, setPeso] = useState('');
-  // Adicionar estados para outras medidas
+  const [name, setName] = useState('');
+  const [weight, setWeight] = useState('');
+  const [selectedImage, setSelectedImage] = useState(blankPhoto);
 
-  const handleSalvar = () => {
-    // Logica para salvar o perfil
-    navigation.goBack();
+  const handleEscolherImagem = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permissão necessária', 'É preciso permissão para acessar a galeria de imagens.');
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+        setSelectedImage(result.assets[0]);
+
+    } catch (error) {
+      console.error('Erro ao escolher imagem:', error);
+    }
+  };
+
+  const handleSalvar = async () => {
+    try {
+      const imageToSend = typeof selectedImage === 'object' ? selectedImage.uri : selectedImage;
+
+      await updateProfile(name, weight, imageToSend);
+      navigation.goBack();
+    } catch (error) {
+      console.error('Erro ao salvar perfil:', error);
+    }
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.headerSpace} />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text>Cancelar</Text>
+          <Text style={styles.text}>Cancelar</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleSalvar}>
-          <Text>Salvar</Text>
+          <Text style={styles.text}>Salvar</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.profileInfo}>
-        <Image
-          source={require('../assets/perfil.png')}
-          style={styles.profileImage}
-        />
-        <Text>Nome:</Text>
+
+        <TouchableOpacity onPress={handleEscolherImagem}>
+          <Image source={selectedImage} style={styles.profileImage} />
+        </TouchableOpacity>
+
+        <Text style={styles.text}>Nome:</Text>
         <TextInput
           style={styles.input}
-          onChangeText={setNome}
-          value={nome}
+          onChangeText={setName}
+          value={name}
         />
-        <Text>Peso Corporal (kg):</Text>
+
+        <Text style={styles.text}>Peso Corporal (kg):</Text>
         <TextInput
           style={styles.input}
           onChangeText={(text) => {
             if (/^\d+$/.test(text) || text === '') {
-              setPeso(text);
+              setWeight(text);
             }
           }}
-          value={peso}
-          keyboardType="numeric" 
+          value={weight}
+          keyboardType="numeric"
         />
-        {/* Adicionar campos para outras medidas */}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#0E153A',
     padding: 20,
   },
   headerSpace: {
@@ -63,9 +94,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
+    paddingHorizontal: 30
   },
   profileInfo: {
     alignItems: 'center',
+  },
+  text:{
+    color: 'white',
+    fontSize: 16,
   },
   profileImage: {
     width: 100,
@@ -75,8 +111,8 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    width: '100%',
-    borderColor: 'gray',
+    width: '60%',
+    borderColor: 'white',
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 10,

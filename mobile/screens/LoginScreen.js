@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { loginUser, verifyTokenOnServer } from '../components/api';
@@ -76,7 +76,7 @@ const validateTokenWithServer = async () => {
 
   
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>
         {' '}
         Fit<Text style={styles.orangeText}>App</Text>
@@ -125,7 +125,7 @@ const validateTokenWithServer = async () => {
           <Text style={styles.registerLink}>Registre-se</Text>
         </Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 

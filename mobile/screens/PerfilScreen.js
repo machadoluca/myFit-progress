@@ -1,10 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { format, addMonths, parseISO } from 'date-fns';
+import { format, addMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { getUserDetails} from '../components/api'; 
 
 const PerfilScreen = ({ navigation }) => {
+  const [userData, setUserData] = useState({
+    name: 'Nome do Usuário',
+    profileImage: require('../assets/perfil.png'),
+  });
+
+  useEffect(() => {
+    fetchUserData()
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const userDetails = await getUserDetails(); 
+
+      setUserData({
+        name: userDetails.name || 'Nome do Usuário',
+        profileImage: userDetails.profileImage || require('../assets/perfil.png'),
+      });
+    } catch (error) {
+      console.error('Erro ao buscar detalhes do usuário:', error);
+    }
+  };
 
   const currentDate = new Date();
 
@@ -40,18 +62,20 @@ const PerfilScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate('EditPerfil')}>
           <Text style={styles.editProfileText}>Editar Perfil</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.profileInfo}>
-        <Image
-          source={require('../assets/perfil.png')}
-          style={styles.profileImage}
-        />
-        <Text style={styles.profileName}>Wesley Gonçalves</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('EditPerfil')}>
+          <Image
+            source={userData.profileImage}
+            style={styles.profileImage}
+          />
+        </TouchableOpacity>
+        <Text style={styles.profileName}>{userData.name}</Text>
       </View>
       <View style={styles.chartContainer}>
         <Text style={styles.chartTitle}>Peso</Text>
@@ -78,7 +102,7 @@ const PerfilScreen = ({ navigation }) => {
           style={styles.chart}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
