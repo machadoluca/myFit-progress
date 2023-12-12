@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import ExerciseController from '../controllers/ExerciseController.js';
+import { verifyAuth } from '../auth/auth.js';
+import ExercisesController from '../controllers/ExercisesController.js';
 
 const exerciseRoutes = Router();
-const exerciseController = new ExerciseController();
+const exerciseController = new ExercisesController();
 
-exerciseRoutes.get('/', exerciseController.listAllExercises);
+exerciseRoutes.get('/', verifyAuth, exerciseController.listAllExercises);
 exerciseRoutes.get('/:id', exerciseController.listById);
-exerciseRoutes.post('/save-workout', exerciseController.saveExercises);
 
 export default exerciseRoutes;

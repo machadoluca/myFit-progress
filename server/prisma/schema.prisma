@@ -10,37 +10,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Professional {
-  proId          String   @id @default(uuid())
-  name           String
-  email          String   @unique
-  password       String
-  CPF            String   @unique
-  professionTime Int
-  createdAt      DateTime @default(now())
+model Treiners {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  CPF       String   @unique
+  createdAt DateTime @default(now())
 
   clients Clients[]
 }
 
 model Clients {
-  clientId  String   @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
 
+  schedules Schedules[]
+
+  treiner   Treiners? @relation(fields: [treinerId], references: [id])
+  treinerId String?
+}
+
+model Schedules {
+  id       String   @id @default(uuid())
+  weekDay  String
+  editedAt DateTime @default(now())
+
   workout Exercises[]
 
-  Professional   Professional? @relation(fields: [professionalId], references: [proId])
-  professionalId String?
+  client   Clients @relation(fields: [clientId], references: [id])
+  clientId String
 }
 
 model Exercises {
-  workoutId   String @id @default(uuid())
-  name        String
-  group       String
-  description String
-  intensity   String
+  id            String  @id @default(uuid())
+  name          String
+  muscularGroup String
+  description   String
+  intensity     String
+  videoUrl      String?
 
-  clients Clients[]
+  schedule Schedules[]
 }

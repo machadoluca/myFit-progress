@@ -1,14 +1,18 @@
 import { Router } from 'express';
-import { verifyAuth } from '../auth/auth.js';
-import UserController from '../controllers/UserController.js';
+import {
+  ClientController,
+  TreinerController
+} from '../controllers/UsersController.js';
+import { verifyAuth, createUserToken, decodeToken } from '../auth/auth.js';
 
 const userRoutes = Router();
-const userController = new UserController();
+const clientController = new ClientController();
+const treinerController = new TreinerController();
 
-/* list all clients with authetication */
-userRoutes.get('/', verifyAuth, userController.returnUsers);
-
-userRoutes.post('/create', userController.createUser);
-userRoutes.delete('/delete', userController.deleteUser);
+userRoutes.post('/create', clientController.createUser);
+userRoutes.delete('/delete', clientController.deleteUser);
+userRoutes.post('/edit', decodeToken, clientController.editSchedule);
+userRoutes.post('/login', createUserToken);
+userRoutes.get('/validate', verifyAuth);
 
 export default userRoutes;
