@@ -63,6 +63,7 @@ const ExerciseScreen = ({route}) => {
         console.log('Exercícios salvos:', response);
   
         setSelectedExercises([]);
+        console.log(selectedExercises)
   
         navigation.goBack();
 

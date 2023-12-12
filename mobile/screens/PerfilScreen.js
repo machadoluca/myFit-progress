@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     marginBottom: 20,
     marginTop: 40,
+    paddingRight: 30,
   },
   editProfileText: {
     color: 'white',

@@ -38,7 +38,6 @@ export default function LoginScreen() {
         const isTokenValid = await validateTokenWithServer();
         if (!isTokenValid) {
           await AsyncStorage.removeItem('userToken');
-          // Redirecionar para a tela de login
           navigation.navigate('Login');
       } else {
         navigation.navigate('HomeTab')
