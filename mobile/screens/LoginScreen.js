@@ -52,7 +52,7 @@ const validateTokenWithServer = async () => {
   try {
     const response = await verifyTokenOnServer();
 
-    if (response && response.valid) {
+    if (response && response.validToken) {
       return true;
     } else {
       return false; 

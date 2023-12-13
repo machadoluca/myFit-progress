@@ -30,7 +30,7 @@ export async function registerUser(name, email, password) {
 
 export async function loginUser(email, password) {
   try {
-    const response = await fetch('http://localhost:3000/login', {
+    const response = await fetch('http://localhost:3000/users/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export async function verifyTokenOnServer() {
       throw new Error('Token não encontrado no AsyncStorage');
     }
 
-    const response = await fetch('http://192.168.2.102:3000/users', {
+    const response = await fetch('http://localhost:3000/users/validate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -141,11 +141,11 @@ export async function updateProfile(name, weight, image) {
   }
 }
 
-export async function saveExercises(selectedExercises,dayOfWeek) {
+export async function saveExercises(selectedExercises, dayOfWeek) {
   try {
     const userToken = await AsyncStorage.getItem('userToken');
 
-    const response = await fetch('http://localhost:3000/exercises/save-workout', {
+    const response = await fetch('http://localhost:3000/users/edit', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
