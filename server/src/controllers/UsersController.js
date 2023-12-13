@@ -1,5 +1,7 @@
 import prisma from '../lib/prisma.js';
 import bcrypt from 'bcryptjs';
+import createClientSchedules from '../utils/createClientSchedules.js';
+import addExercisesInSchedules from '../utils/addExercisesInSchedule.js';
 
 class ClientController {
   async createUser(request, response) {
@@ -24,7 +26,7 @@ class ClientController {
         }
       });
 
-      this.#createClientSchedules(newUser.id);
+      createClientSchedules(newUser.id);
 
       return response.status(201).send({ message: 'User created' });
     } catch {
@@ -51,8 +53,8 @@ class ClientController {
   }
 
   async editSchedule(request, response) {
+    let { selectedExercises, weekDay } = request.body;
     const { userId } = request;
-    const { selectedExercises, weekDay } = request.body;
     const { id: scheduleId } = await prisma.schedules.findFirst({
       where: {
         clientId: userId,
@@ -60,58 +62,9 @@ class ClientController {
       }
     });
 
-    this.#addExercisesInSchedule(scheduleId, selectedExercises);
+    addExercisesInSchedules(scheduleId, selectedExercises);
 
     return response.status(200).send({ scheduleId });
-  }
-
-  async #createClientSchedules(id) {
-    const weekDays = [
-      'Domingo',
-      'Segunda',
-      'Terça',
-      'Quarta',
-      'Quinta',
-      'Sexta',
-      'Sábado'
-    ];
-
-    /**
-     * change to create many
-     */
-    for (let day of weekDays) {
-      await prisma.schedules.create({
-        data: {
-          weekDay: day,
-          clientId: id
-        }
-      });
-    }
-  }
-
-  async #addExercisesInSchedule(scheduleId, exercises) {
-    const formatExercises = exercises.map(exercise => exercise.toLowerCase());
-    const exercisesId = await prisma.exercises.findMany({
-      where: {
-        name: {
-          in: formatExercises
-        }
-      },
-      select: {
-        id: true
-      }
-    });
-
-    await prisma.schedules.update({
-      where: {
-        id: scheduleId
-      },
-      data: {
-        workout: {
-          connect: exercisesId.map(item => ({ id: item.id }))
-        }
-      }
-    });
   }
 }
 
