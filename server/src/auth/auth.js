@@ -4,50 +4,56 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 export async function createUserToken(request, response) {
-  const { email, password } = request.body;
-  const user = await prisma.clients.findUnique({
-    where: {
-      email
-    }
-  });
-
-  if (!user) {
-    return response.status(400).send({ error: 'email not found ' });
-  }
-
-  const passwordTest = await bcrypt.compare(password, user.password);
-
-  if (!passwordTest) {
-    return response.status(400).send({ error: 'password invalid' });
-  }
-
-  const token = jwt.sign({ userId: user.clientId }, process.env.SECRET_KEY, {
-    expiresIn: '1h'
-  });
-
-  response.status(201).send({ token });
-}
-
-export async function verifyAuth(request, response, next) {
-  const { authorization } = request.headers;
-
-  if (!authorization) {
-    return response.status(401).send({ error: 'Token not provided' });
-  }
-
-  const [, token] = authorization.split(' ');
-
   try {
-    jwt.verify(token, process.env.SECRET_KEY);
-    next();
+    const { email, password } = request.body;
+    const user = await prisma.clients.findUniqueOrThrow({
+      where: {
+        email
+      }
+    });
+
+    const passwordCompare = await bcrypt.compare(password, user.password);
+    if (!passwordCompare) {
+      throw new Error('Invalid password');
+    }
+    const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, {
+      expiresIn: '1h'
+    });
+    return response.status(202).send({ token });
   } catch {
-    return response.status(401).send({ error: 'Invalid token' });
+    return response.status(404).json({ error: 'User not found' });
   }
 }
 
-export async function decodeToken(auth) {
-  const [, token] = auth.split(' ');
-  const user = jwt.verify(token, process.env.SECRET_KEY);
+export function verifyAuth(request, response) {
+  try {
+    const { authorization } = request.headers;
+    if (!authorization) {
+      throw new Error('Token not provided');
+    }
+    const [, token] = authorization.split(' ');
+    const isValidToken = jwt.verify(token, process.env.SECRET_KEY);
 
-  return user;
+    if (isValidToken) {
+      return response.status(200).send({ validToken: true });
+    }
+  } catch (error) {
+    return response.status(401).send({ error: error.message });
+  }
+}
+
+export function decodeToken(request, response, next) {
+  try {
+    const { authorization } = request.headers;
+
+    if (!authorization) {
+      throw new Error('Token not provided');
+    }
+    const [, token] = authorization.split(' ');
+    const decodedToken = jwt.decode(token, process.env.SECRET_KEY);
+    request.userId = decodedToken.userId;
+    next();
+  } catch (error) {
+    return response.status(401).send({ error: error.message });
+  }
 }

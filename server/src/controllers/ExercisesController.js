@@ -1,7 +1,6 @@
 import prisma from '../lib/prisma.js';
-import { decodeToken } from '../auth/auth.js';
 
-class ExerciseController {
+class ExercisesController {
   async listAllExercises(_, response) {
     const exercises = await prisma.exercises.findMany();
 
@@ -18,14 +17,6 @@ class ExerciseController {
 
     return response.status(200).send(exercises);
   }
-
-  async saveExercises(request, response) {
-    const { authorization } = request.header;
-    const exercises = request.body;
-
-    console.log(decodeToken(authorization));
-    console.log(exercises);
-  }
 }
 
-export default ExerciseController;
+export default ExercisesController;
