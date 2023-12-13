@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, StyleSheet, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, TextInput, StyleSheet, Text, TouchableOpacity, SafeAreaView, AppState } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { loginUser, verifyTokenOnServer } from '../components/api';
@@ -27,27 +27,37 @@ export default function LoginScreen() {
     }
   };
 
-  useEffect(() => {
-    checkTokenValidity();
-  }, []);
-
   const checkTokenValidity = async () => {
     try {
       const userToken = await AsyncStorage.getItem('userToken');
       if (userToken) {
-        const isTokenValid = await validateTokenWithServer();
+        const isTokenValid = await validateTokenWithServer(userToken);
         if (!isTokenValid) {
           await AsyncStorage.removeItem('userToken');
           navigation.navigate('Login');
-      } else {
-        navigation.navigate('HomeTab')
+        } else {
+          navigation.navigate('HomeTab');
+        }
       }
-    }
     } catch (error) {
-      console.error('Erro ao verificar o token:', error);
     }
   };
-  
+
+  useEffect(() => {
+    checkTokenValidity();
+
+    const handleAppStateChange = (nextAppState) => {
+      if (nextAppState === 'active') {
+        checkTokenValidity();
+      }
+    };
+
+    AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange);
+    };
+  }, []);
 const validateTokenWithServer = async () => {
   try {
     const response = await verifyTokenOnServer();

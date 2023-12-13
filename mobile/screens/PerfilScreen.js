@@ -4,6 +4,7 @@ import { LineChart } from 'react-native-chart-kit';
 import { format, addMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { getUserDetails} from '../components/api'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PerfilScreen = ({ navigation }) => {
   const [userData, setUserData] = useState({
@@ -61,12 +62,24 @@ const PerfilScreen = ({ navigation }) => {
     };
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('userToken');
+      navigation.navigate('Login');
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate('EditPerfil')}>
-          <Text style={styles.editProfileText}>Editar Perfil</Text>
-        </TouchableOpacity>
+        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+            <Text style={styles.logoutText}>Sair</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('EditPerfil')}>
+            <Text style={styles.editProfileText}>Editar Perfil</Text>
+          </TouchableOpacity>
       </View>
       <View style={styles.profileInfo}>
         <TouchableOpacity onPress={() => navigation.navigate('EditPerfil')}>
@@ -114,12 +127,20 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     marginBottom: 20,
     marginTop: 40,
-    paddingRight: 30,
+    paddingHorizontal: 20,
   },
   editProfileText: {
+    color: 'white',
+  },
+
+  logoutButton: {
+    marginRight: 'auto'
+  },
+
+  logoutText: {
     color: 'white',
   },
   profileInfo: {
