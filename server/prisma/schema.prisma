@@ -46,12 +46,12 @@ model Schedules {
 }
 
 model Exercises {
-  id            String  @id @default(uuid())
-  name          String
-  muscularGroup String
-  description   String
-  intensity     String
-  videoUrl      String?
+  id          String  @id @default(uuid())
+  name        String
+  group       String
+  description String
+  intensity   String
+  videoUrl    String?
 
   schedule Schedules[]
 }

@@ -2,7 +2,12 @@ import prisma from '../lib/prisma.js';
 
 class ExercisesController {
   async listAllExercises(_, response) {
-    const exercises = await prisma.exercises.findMany();
+    const exercises = await prisma.exercises.findMany({
+      select: {
+        name: true,
+        muscularGroup: true
+      }
+    });
 
     return response.status(200).send(exercises);
   }
