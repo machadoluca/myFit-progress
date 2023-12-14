@@ -14,7 +14,6 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     try {
       const data = await loginUser(email, password);
-      console.log(data);
 
       if (data && data.token) {
         console.log('Token recebido:', data.token);

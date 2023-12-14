@@ -1,15 +1,35 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { getScheduleByDayOfWeek } from '../api';
 
 const DayOfWeekPage = ({ dayOfWeek, handleAddExercise }) => {
+  const [scheduleExercises, setScheduleExercises] = useState([]);
+
+  useEffect(() => {
+    async function fetchSchedule() {
+      try {
+        const exercises = await getScheduleByDayOfWeek(dayOfWeek);
+        setScheduleExercises(exercises);
+      } catch (error) {
+        console.error('Erro ao buscar agenda de exercícios:', error);
+      }
+    }
+
+    fetchSchedule();
+  }, [dayOfWeek]);
+
   
     return (
       <SafeAreaView style={styles.dayOfWeekContainer}>
                 
         {dayOfWeek === 1 && (
           <ScrollView  showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-            <Text style={styles.text}>Texto aleatório para Segunda-feira</Text>
+            {scheduleExercises && scheduleExercises.map((exercise, index) => (
+            <View key={index}>
+              <Text>{exercise.name}</Text>
+            </View>
+          ))}
 
             <TouchableOpacity style={styles.addButton}onPress={() => handleAddExercise(dayOfWeek)}>
               <Icon name="plus-circle" size={20} color="white" style={styles.plusIcon} />
@@ -21,9 +41,11 @@ const DayOfWeekPage = ({ dayOfWeek, handleAddExercise }) => {
   
         {dayOfWeek === 2 && (
           <ScrollView  showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-            <Text style={styles.text}>Texto aleatório para Terça-feira</Text>
-            {/* Aqui você pode inserir uma imagem aleatória */}
-            <Image source={{ uri: 'https://i.pinimg.com/236x/73/9f/84/739f84b67cdd22dac888a3fc5c6192d1.jpg' }} style={{ width: 200, height: 200, marginVertical: 20, }} />
+            {scheduleExercises && scheduleExercises.map((exercise, index) => (
+            <View key={index}>
+              <Text>{exercise.name}</Text>
+            </View>
+          ))}
 
             <TouchableOpacity style={styles.addButton} onPress={() => handleAddExercise(dayOfWeek)}>
               <Icon name="plus-circle" size={20} color="white" style={styles.plusIcon} />
@@ -35,7 +57,11 @@ const DayOfWeekPage = ({ dayOfWeek, handleAddExercise }) => {
 
         {dayOfWeek === 3 && (
           <ScrollView  showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-            <Text style={styles.text}>Texto aleatório para Quarta-feira</Text>
+            {scheduleExercises && scheduleExercises.map((exercise, index) => (
+            <View key={index}>
+              <Text>{exercise.name}</Text>
+            </View>
+          ))}
 
             <TouchableOpacity style={styles.addButton}onPress={() => handleAddExercise(dayOfWeek)}>
               <Icon name="plus-circle" size={20} color="white" style={styles.plusIcon} />
@@ -47,7 +73,11 @@ const DayOfWeekPage = ({ dayOfWeek, handleAddExercise }) => {
 
         {dayOfWeek === 4 && (
           <ScrollView  showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-            <Text style={styles.text}>Texto aleatório para Quinta-feira</Text>
+            {scheduleExercises && scheduleExercises.map((exercise, index) => (
+            <View key={index}>
+              <Text>{exercise.name}</Text>
+            </View>
+          ))}
 
             <TouchableOpacity style={styles.addButton} onPress={() => handleAddExercise(dayOfWeek)}>
               <Icon name="plus-circle" size={20} color="white" style={styles.plusIcon} />
@@ -59,7 +89,11 @@ const DayOfWeekPage = ({ dayOfWeek, handleAddExercise }) => {
 
         {dayOfWeek === 5 && (
           <ScrollView  showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-            <Text style={styles.text}>Texto aleatório para Sexta-feira</Text>
+            {scheduleExercises && scheduleExercises.map((exercise, index) => (
+            <View key={index}>
+              <Text>{exercise.name}</Text>
+            </View>
+          ))}
 
             <TouchableOpacity style={styles.addButton} onPress={() => handleAddExercise(dayOfWeek)}>
               <Icon name="plus-circle" size={20} color="white" style={styles.plusIcon} />
@@ -71,7 +105,11 @@ const DayOfWeekPage = ({ dayOfWeek, handleAddExercise }) => {
 
         {dayOfWeek === 6 && (
           <ScrollView  showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-            <Text style={styles.text}>Texto aleatório para Sabado</Text>
+            {scheduleExercises && scheduleExercises.map((exercise, index) => (
+            <View key={index}>
+              <Text>{exercise.name}</Text>
+            </View>
+          ))}
 
             <TouchableOpacity style={styles.addButton} onPress={() => handleAddExercise(dayOfWeek)}>
               <Icon name="plus-circle" size={20} color="white" style={styles.plusIcon} />
@@ -83,8 +121,11 @@ const DayOfWeekPage = ({ dayOfWeek, handleAddExercise }) => {
 
         {dayOfWeek === 0 && (
           <ScrollView  showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-            <Text style={styles.text}>Texto aleatório para Domingo</Text>
-
+            {scheduleExercises && scheduleExercises.map((exercise, index) => (
+            <View key={index}>
+              <Text>{exercise.name}</Text>
+            </View>
+          ))}
             <TouchableOpacity style={styles.addButton} onPress={() => handleAddExercise(dayOfWeek)}>
               <Icon name="plus-circle" size={20} color="white" style={styles.plusIcon} />
               <Text style={styles.addButtonText}>Adicionar Exercício</Text>

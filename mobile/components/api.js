@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export async function registerUser(name, email, password) {
   try {
-    const response = await fetch('http://192.168.2.110:3000/users/create', {
+    const response = await fetch('http://localhost:3000/users/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export async function registerUser(name, email, password) {
 
 export async function loginUser(email, password) {
   try {
-    const response = await fetch('http://192.168.2.110:3000/users/login', {
+    const response = await fetch('http://localhost:3000/users/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export async function verifyTokenOnServer() {
       throw new Error('Token não encontrado no AsyncStorage');
     }
 
-    const response = await fetch('http://192.168.2.110:3000/users/validate', {
+    const response = await fetch('http://localhost:3000/users/validate', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ export async function verifyTokenOnServer() {
 export async function getUserDetails() {
   try {
     const userToken = await AsyncStorage.getItem('userToken');
-    const response = await fetch('http://192.168.2.110:3000/users/???', {
+    const response = await fetch('http://localhost:3000/users/???', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ export async function updateProfile(name, weight, image) {
       name: 'profileImage.jpg',
     });
 
-    const response = await fetch('http://192.168.2.110:3000/users/update-profile', {
+    const response = await fetch('http://localhost:3000/users/update-profile', {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
@@ -146,7 +146,7 @@ export async function saveExercises(selectedExercises, dayOfWeek) {
     const userToken = await AsyncStorage.getItem('userToken');
     console.log(dayOfWeek)
 
-    const response = await fetch('http://192.168.2.110:3000/users/edit', {
+    const response = await fetch('http://localhost:3000/users/edit', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -166,12 +166,36 @@ export async function saveExercises(selectedExercises, dayOfWeek) {
 
 export async function getExercisesFromServer() {
   try {
-    const response = await fetch('http://192.168.2.110:3000/exercises');
+    const response = await fetch('http://localhost:3000/exercises');
     const data = await response.json();
 
     return data;
   } catch (error) {
     console.error('Erro ao buscar exercícios do servidor:', error);
     return null;
+  }
+}
+
+export async function getScheduleByDayOfWeek(weekDay) {
+  try {
+    const userToken = await AsyncStorage.getItem('userToken');
+    const response = await fetch(`http://localhost:3000/users/schedule?weekDay=${weekDay}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${userToken}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return data.scheduleExercises;
+    } else {
+      throw new Error('Erro ao buscar agenda de exercícios');
+    }
+  } catch (error) {
+    console.error('Erro ao buscar agenda de exercícios:', error);
+    throw error;
   }
 }
