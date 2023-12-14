@@ -2,7 +2,6 @@ import prisma from '../lib/prisma.js';
 
 async function addExercisesInSchedules(scheduleId, exercises) {
   const formatExercises = exercises.map(exercise => exercise.toLowerCase());
-
   const exercisesId = await prisma.exercises.findMany({
     where: {
       name: {

@@ -144,6 +144,7 @@ export async function updateProfile(name, weight, image) {
 export async function saveExercises(selectedExercises, dayOfWeek) {
   try {
     const userToken = await AsyncStorage.getItem('userToken');
+    console.log(dayOfWeek)
 
     const response = await fetch('http://192.168.2.110:3000/users/edit', {
       method: 'POST',

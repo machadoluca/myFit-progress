@@ -117,7 +117,7 @@ const ExerciseScreen = ({route}) => {
         <View style={styles.exercisesContainer}>
           {filterExercises().map((exercise) => (
             <TouchableOpacity
-              key={exercise.workoutId}
+              key={exercise.id}
               onPress={() => handleExerciseSelection(exercise.name)}
               style={[
                 styles.exerciseItem,

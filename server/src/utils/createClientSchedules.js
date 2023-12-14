@@ -1,20 +1,10 @@
 import prisma from '../lib/prisma.js';
 
 async function createClientSchedules(id) {
-  const weekDays = [
-    'Domingo',
-    'Segunda',
-    'Terça',
-    'Quarta',
-    'Quinta',
-    'Sexta',
-    'Sábado'
-  ];
-
-  for (let day of weekDays) {
+  for (let i = 0; i < 7; i++) {
     await prisma.schedules.create({
       data: {
-        weekDay: day,
+        weekDay: i,
         clientId: id
       }
     });
