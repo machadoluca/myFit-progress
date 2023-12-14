@@ -36,7 +36,7 @@ model Clients {
 
 model Schedules {
   id       String   @id @default(uuid())
-  weekDay  String
+  weekDay  Int
   editedAt DateTime @default(now())
 
   workout Exercises[]

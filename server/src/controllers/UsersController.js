@@ -64,7 +64,28 @@ class ClientController {
 
     addExercisesInSchedules(scheduleId, selectedExercises);
 
-    return response.status(200).send({ scheduleId });
+    return response.status(200).send({ message: 'ok' });
+  }
+
+  async showSchedule(request, response) {
+    const { weekDay } = request.body;
+    const { userId } = request;
+    const scheduleExercises = await prisma.schedules.findFirst({
+      where: {
+        clientId: userId,
+        weekDay
+      },
+      select: {
+        workout: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
+    });
+
+    return response.send({ scheduleExercises });
   }
 }
 
