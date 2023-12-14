@@ -5,7 +5,7 @@ class ExercisesController {
     const exercises = await prisma.exercises.findMany({
       select: {
         name: true,
-        muscularGroup: true
+        group: true
       }
     });
 
