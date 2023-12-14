@@ -11,5 +11,5 @@ here is a [link](https://www.canva.com/design/DAFfwFl740A/yCd27XCaSjTL-nN3hyJASw
 
 # video preview
 
-https://github.com/machadoluca/myFit-progress/assets/104808924/b6b6329d-78d7-4792-b4e8-784fa3844094
+https://github.com/machadoluca/myFit-progress/assets/104808924/cf9b06dd-7d90-4040-9715-a9c746cbbdc3
 
